@@ -4,11 +4,17 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-47z0zo(=4bi-r5aprr!uck-h&&qyqpp1%0f!)(+la0@tbo+-(5")
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-47z0zo(=4bi-r5aprr!uck-h&&qyqpp1%0f!)(+la0@tbo+-(5"
+)
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 # Хосты
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost,pohorila-cv-backend.onrender.com").split(",")
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    "127.0.0.1,localhost,pohorila-cv-backend.onrender.com,pohorila.com"
+).split(",")
 
 # Приложения
 INSTALLED_APPS = [
@@ -35,7 +41,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CSRF
+# CSRF & CORS
 CSRF_TRUSTED_ORIGINS = [
     "https://pohorila-cv-backend.onrender.com",
     "https://pohorila.com",
@@ -97,3 +103,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Дополнительно для Render: разрешить отдавать медиа в проде
+if not DEBUG:
+    # django.views.static.serve для отдачи медиа на проде
+    from django.views.static import serve
+    MEDIA_SERVE_VIEW = serve
+
