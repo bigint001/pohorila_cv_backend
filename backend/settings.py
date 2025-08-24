@@ -98,7 +98,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "https://pohorila-cv-backend.onrender.com/media/"
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
