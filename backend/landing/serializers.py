@@ -13,17 +13,25 @@ class HeaderSerializer(serializers.ModelSerializer):
     def get_avatar(self, obj):
         if obj.avatar:
             url = obj.avatar.url
-            if url.startswith("/media/"):
-                return f"https://res.cloudinary.com/devuh5mvj{url}"
-            return url
+            # Если Cloudinary, он всегда начинается с https://res.cloudinary.com
+            if url.startswith("http"):
+                return url
+            # если вдруг локальный /media/
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(url)
+            return f"https://pohorila-cv-backend.onrender.com{url}"
         return ""
 
     def get_background(self, obj):
         if obj.background:
             url = obj.background.url
-            if url.startswith("/media/"):
-                return f"https://res.cloudinary.com/devuh5mvj{url}"
-            return url
+            if url.startswith("http"):
+                return url
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(url)
+            return f"https://pohorila-cv-backend.onrender.com{url}"
         return ""
 
 
@@ -45,9 +53,12 @@ class PdfFileSerializer(serializers.ModelSerializer):
     def get_file_url(self, obj):
         if obj.file:
             url = obj.file.url
-            if url.startswith("/media/"):
-                return f"https://res.cloudinary.com/devuh5mvj{url}"
-            return url
+            if url.startswith("http"):
+                return url
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(url)
+            return f"https://pohorila-cv-backend.onrender.com{url}"
         return ""
 
     def get_file_name(self, obj):
@@ -83,9 +94,12 @@ class ProjectImageSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         if obj.image:
             url = obj.image.url
-            if url.startswith("/media/"):
-                return f"https://res.cloudinary.com/devuh5mvj{url}"
-            return url
+            if url.startswith("http"):
+                return url
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(url)
+            return f"https://pohorila-cv-backend.onrender.com{url}"
         return ""
 
 
@@ -100,9 +114,12 @@ class ProjectSerializer(serializers.ModelSerializer):
     def get_main_image(self, obj):
         if obj.main_image:
             url = obj.main_image.url
-            if url.startswith("/media/"):
-                return f"https://res.cloudinary.com/devuh5mvj{url}"
-            return url
+            if url.startswith("http"):
+                return url
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(url)
+            return f"https://pohorila-cv-backend.onrender.com{url}"
         return ""
 
 
