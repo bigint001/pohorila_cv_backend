@@ -8,19 +8,29 @@ class HeaderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Header
-        fields = ['avatar', 'background']
+        fields = ["avatar", "background"]
 
     def get_avatar(self, obj):
-        return obj.avatar.url if obj.avatar else ''
+        if obj.avatar:
+            url = obj.avatar.url
+            if url.startswith("/media/"):
+                return f"https://res.cloudinary.com/devuh5mvj{url}"
+            return url
+        return ""
 
     def get_background(self, obj):
-        return obj.background.url if obj.background else ''
+        if obj.background:
+            url = obj.background.url
+            if url.startswith("/media/"):
+                return f"https://res.cloudinary.com/devuh5mvj{url}"
+            return url
+        return ""
 
 
 class PdfCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PdfCategory
-        fields = ('id', 'name')
+        fields = ("id", "name")
 
 
 class PdfFileSerializer(serializers.ModelSerializer):
@@ -30,13 +40,20 @@ class PdfFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PdfFile
-        fields = ('id', 'file', 'title', 'category', 'file_url', 'file_name')
+        fields = ("id", "file", "title", "category", "file_url", "file_name")
 
     def get_file_url(self, obj):
-        return obj.file.url if obj.file else ""
+        if obj.file:
+            url = obj.file.url
+            if url.startswith("/media/"):
+                return f"https://res.cloudinary.com/devuh5mvj{url}"
+            return url
+        return ""
 
     def get_file_name(self, obj):
-        return obj.file.name.split('/')[-1] if obj.file else ""
+        if obj.file:
+            return obj.file.name.split("/")[-1]
+        return ""
 
 
 class SummarySerializer(serializers.ModelSerializer):
@@ -52,7 +69,7 @@ class SummarySerializer(serializers.ModelSerializer):
             "phone_1",
             "phone_2",
             "email",
-            "pdfs"
+            "pdfs",
         )
 
 
@@ -64,7 +81,12 @@ class ProjectImageSerializer(serializers.ModelSerializer):
         fields = ["id", "image"]
 
     def get_image(self, obj):
-        return obj.image.url if obj.image else ''
+        if obj.image:
+            url = obj.image.url
+            if url.startswith("/media/"):
+                return f"https://res.cloudinary.com/devuh5mvj{url}"
+            return url
+        return ""
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -76,6 +98,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "main_image", "images"]
 
     def get_main_image(self, obj):
-        return obj.main_image.url if obj.main_image else ''
+        if obj.main_image:
+            url = obj.main_image.url
+            if url.startswith("/media/"):
+                return f"https://res.cloudinary.com/devuh5mvj{url}"
+            return url
+        return ""
 
 

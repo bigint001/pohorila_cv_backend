@@ -25,7 +25,6 @@ ALLOWED_HOSTS = os.getenv(
 INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
-
     'backend.landing',
     'corsheaders',
     'django.contrib.admin',
@@ -36,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
 ]
+
 
 # Middleware
 MIDDLEWARE = [
