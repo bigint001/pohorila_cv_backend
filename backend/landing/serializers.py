@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Header, Summary, PdfFile, PdfCategory, Project, ProjectImage
 
+
 class HeaderSerializer(serializers.ModelSerializer):
     avatar = serializers.SerializerMethodField()
     background = serializers.SerializerMethodField()
@@ -10,22 +11,10 @@ class HeaderSerializer(serializers.ModelSerializer):
         fields = ['avatar', 'background']
 
     def get_avatar(self, obj):
-        request = self.context.get('request')
-        if obj.avatar:
-            url = obj.avatar.url
-            if request:
-                return request.build_absolute_uri(url).replace('http://', 'https://')
-            return f'https://pohorila-cv-backend.onrender.com{url}'
-        return ''
+        return obj.avatar.url if obj.avatar else ''
 
     def get_background(self, obj):
-        request = self.context.get('request')
-        if obj.background:
-            url = obj.background.url
-            if request:
-                return request.build_absolute_uri(url).replace('http://', 'https://')
-            return f'https://pohorila-cv-backend.onrender.com{url}'
-        return ''
+        return obj.background.url if obj.background else ''
 
 
 class PdfCategorySerializer(serializers.ModelSerializer):
@@ -44,18 +33,10 @@ class PdfFileSerializer(serializers.ModelSerializer):
         fields = ('id', 'file', 'title', 'category', 'file_url', 'file_name')
 
     def get_file_url(self, obj):
-        if obj.file:
-            request = self.context.get('request')
-            url = obj.file.url
-            if request:
-                return request.build_absolute_uri(url).replace('http://', 'https://')
-            return f'https://pohorila-cv-backend.onrender.com{url}'
-        return ""
+        return obj.file.url if obj.file else ""
 
     def get_file_name(self, obj):
-        if obj.file:
-            return obj.file.name.split('/')[-1]
-        return ""
+        return obj.file.name.split('/')[-1] if obj.file else ""
 
 
 class SummarySerializer(serializers.ModelSerializer):
@@ -83,13 +64,7 @@ class ProjectImageSerializer(serializers.ModelSerializer):
         fields = ["id", "image"]
 
     def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.image:
-            url = obj.image.url
-            if request:
-                return request.build_absolute_uri(url).replace('http://', 'https://')
-            return f'https://pohorila-cv-backend.onrender.com{url}'
-        return ''
+        return obj.image.url if obj.image else ''
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -101,11 +76,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "main_image", "images"]
 
     def get_main_image(self, obj):
-        request = self.context.get('request')
-        if obj.main_image:
-            url = obj.main_image.url
-            if request:
-                return request.build_absolute_uri(url).replace('http://', 'https://')
-            return f'https://pohorila-cv-backend.onrender.com{url}'
-        return ''
+        return obj.main_image.url if obj.main_image else ''
+
 
