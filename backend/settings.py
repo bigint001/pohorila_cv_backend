@@ -54,8 +54,15 @@ MIDDLEWARE = [
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'devuh5mvj',
+    'API_KEY': '188155634532123',
+    'API_SECRET': 'cllUUEqbkYwicCP_tDmmrwzQo48'
+}
+
 
 MEDIA_URL = '/media/'
 
