@@ -53,8 +53,14 @@ class PdfFileSerializer(serializers.ModelSerializer):
     def get_file_url(self, obj):
         if obj.file:
             url = obj.file.url
+
+            # ✅ если это PDF на Cloudinary — делаем "force download"
+            if url.startswith("https://res.cloudinary.com") and url.endswith(".pdf"):
+                return url.replace("/upload/", "/upload/fl_attachment/")
+
             if url.startswith("http"):
                 return url
+
             request = self.context.get("request")
             if request:
                 return request.build_absolute_uri(url)
