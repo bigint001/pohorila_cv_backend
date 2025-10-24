@@ -1,5 +1,6 @@
 from django.db import models
 from cloudinary_storage.storage import MediaCloudinaryStorage  # 💡 подключаем Cloudinary storage
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 
 class Header(models.Model):
@@ -18,10 +19,13 @@ class PdfCategory(models.Model):
 
 
 class PdfFile(models.Model):
-    file = models.FileField(storage=MediaCloudinaryStorage(), upload_to='files/')
+    file = models.FileField(
+        upload_to='files/',
+        storage=RawMediaCloudinaryStorage(),  # ✅ это ключ
+    )
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
-        PdfCategory,
+        'PdfCategory',
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
