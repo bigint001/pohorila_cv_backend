@@ -13,8 +13,10 @@ class HeaderSerializer(serializers.ModelSerializer):
     def get_avatar(self, obj):
         if obj.avatar:
             url = obj.avatar.url
+            # Если Cloudinary, он всегда начинается с https://res.cloudinary.com
             if url.startswith("http"):
                 return url
+            # если вдруг локальный /media/
             request = self.context.get("request")
             if request:
                 return request.build_absolute_uri(url)
@@ -49,23 +51,15 @@ class PdfFileSerializer(serializers.ModelSerializer):
         fields = ("id", "file", "title", "category", "file_url", "file_name")
 
     def get_file_url(self, obj):
-        if not obj.file:
-            return ""
-
-        url = obj.file.url
-
-        # ✅ Cloudinary уже сам знает MIME (не трогаем /image/upload/)
-        if url.startswith("https://res.cloudinary.com"):
-            # если Cloudinary почему-то вернул без расширения — добавим .pdf
-            if not url.lower().endswith(".pdf"):
-                url += ".pdf"
-            return url
-
-        # ✅ Локальный /media/
-        request = self.context.get("request")
-        if request:
-            return request.build_absolute_uri(url)
-        return f"https://pohorila-cv-backend.onrender.com{url}"
+        if obj.file:
+            url = obj.file.url
+            if url.startswith("http"):
+                return url
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(url)
+            return f"https://pohorila-cv-backend.onrender.com{url}"
+        return ""
 
     def get_file_name(self, obj):
         if obj.file:
@@ -127,6 +121,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(url)
             return f"https://pohorila-cv-backend.onrender.com{url}"
         return ""
+
 
 
 
