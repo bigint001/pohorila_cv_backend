@@ -41,6 +41,12 @@ class PdfCategorySerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
+def get_file_name(obj):
+    if obj.file:
+        return obj.file.name.split("/")[-1]
+    return ""
+
+
 class PdfFileSerializer(serializers.ModelSerializer):
     category = PdfCategorySerializer(read_only=True)
     file_url = serializers.SerializerMethodField()
@@ -51,26 +57,29 @@ class PdfFileSerializer(serializers.ModelSerializer):
         fields = ("id", "file", "title", "category", "file_url", "file_name")
 
     def get_file_url(self, obj):
-        if obj.file:
-            url = obj.file.url
+        if not obj.file:
+            return ""
 
-            # ✅ если это PDF на Cloudinary — делаем "force download"
-            if url.startswith("https://res.cloudinary.com") and url.endswith(".pdf"):
-                return url.replace("/upload/", "/upload/fl_attachment/")
+        url = obj.file.url
 
-            if url.startswith("http"):
-                return url
+        # ✅ Cloudinary: форсируем скачивание (даже если в конце нет .pdf)
+        if "res.cloudinary.com" in url and "/upload/" in url:
+            # берём имя файла из Django и гарантируем .pdf
+            filename = obj.file.name.split("/")[-1]
+            if not filename.lower().endswith(".pdf"):
+                filename = f"{filename}.pdf"
+            # вставляем fl_attachment:<filename> после /upload/
+            return url.replace("/upload/", f"/upload/fl_attachment:{filename}/")
 
-            request = self.context.get("request")
-            if request:
-                return request.build_absolute_uri(url)
-            return f"https://pohorila-cv-backend.onrender.com{url}"
-        return ""
+        # ✅ Прочие абсолютные URL — как есть
+        if url.startswith("http"):
+            return url
 
-    def get_file_name(self, obj):
-        if obj.file:
-            return obj.file.name.split("/")[-1]
-        return ""
+        # ✅ Локальная дев-среда
+        request = self.context.get("request")
+        if request:
+            return request.build_absolute_uri(url)
+        return f"https://pohorila-cv-backend.onrender.com{url}"
 
 
 class SummarySerializer(serializers.ModelSerializer):
