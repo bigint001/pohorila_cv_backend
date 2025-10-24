@@ -57,12 +57,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'devuh5mvj',
-    'API_KEY': '188155634532123',
-    'API_SECRET': 'cllUUEqbkYwicCP_tDmmrwzQo48'
-}
-
+CLOUDINARY_URL = "cloudinary://188155634532123:cllUUEqbkYwicCP_tDmmrwzQo48@devuh5mvj"
 
 MEDIA_URL = '/media/'
 

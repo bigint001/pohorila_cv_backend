@@ -1,8 +1,10 @@
 from django.db import models
+from cloudinary_storage.storage import MediaCloudinaryStorage  # 💡 подключаем Cloudinary storage
+
 
 class Header(models.Model):
-    background = models.ImageField(upload_to="header/")
-    avatar = models.ImageField(upload_to="header/")
+    background = models.ImageField(storage=MediaCloudinaryStorage(), upload_to="header/")
+    avatar = models.ImageField(storage=MediaCloudinaryStorage(), upload_to="header/")
 
     def __str__(self):
         return "Header settings"
@@ -16,7 +18,7 @@ class PdfCategory(models.Model):
 
 
 class PdfFile(models.Model):
-    file = models.FileField(upload_to='files/')
+    file = models.FileField(storage=MediaCloudinaryStorage(), upload_to='files/')
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
         PdfCategory,
@@ -46,8 +48,8 @@ class Summary(models.Model):
 
 class Project(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)  # описание
-    main_image = models.ImageField(upload_to="projects/main/")
+    description = models.TextField(blank=True, null=True)
+    main_image = models.ImageField(storage=MediaCloudinaryStorage(), upload_to="projects/main/")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -59,8 +61,9 @@ class ProjectImage(models.Model):
     project = models.ForeignKey(
         Project, related_name="images", on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to="projects/gallery/")
+    image = models.ImageField(storage=MediaCloudinaryStorage(), upload_to="projects/gallery/")
 
     def __str__(self):
         return f"{self.project.title} - {self.image.name}"
+
 
