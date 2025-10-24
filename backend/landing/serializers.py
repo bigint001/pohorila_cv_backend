@@ -54,22 +54,14 @@ class PdfFileSerializer(serializers.ModelSerializer):
 
         url = obj.file.url
 
-        # ✅ 1. Новый Cloudinary RAW-файл — всё ок
-        if "/raw/upload/" in url:
+        # ✅ Cloudinary уже сам знает MIME (не трогаем /image/upload/)
+        if url.startswith("https://res.cloudinary.com"):
+            # если Cloudinary почему-то вернул без расширения — добавим .pdf
+            if not url.lower().endswith(".pdf"):
+                url += ".pdf"
             return url
 
-        # ✅ 2. Старый Cloudinary IMAGE-файл — автоисправление
-        if "res.cloudinary.com" in url and "/image/upload/" in url:
-            fixed_url = url.replace("/image/upload/", "/raw/upload/")
-            print(f"⚡ Auto-fixed Cloudinary URL: {fixed_url}")
-
-            # сохраняем правку в базе, чтобы навсегда зафиксировать
-            obj.file.name = obj.file.name.replace("/image/upload/", "/raw/upload/")
-            obj.save(update_fields=["file"])
-
-            return fixed_url
-
-        # ✅ 3. Обычный локальный /media/ (на случай дев-сервера)
+        # ✅ Локальный /media/
         request = self.context.get("request")
         if request:
             return request.build_absolute_uri(url)
