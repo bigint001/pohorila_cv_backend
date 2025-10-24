@@ -19,13 +19,10 @@ class PdfCategory(models.Model):
 
 
 class PdfFile(models.Model):
-    file = models.FileField(
-        upload_to='files/',
-        storage=RawMediaCloudinaryStorage(),  # ✅ это ключ
-    )
+    file = models.FileField(upload_to='files/')
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
-        'PdfCategory',
+        PdfCategory,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -34,6 +31,7 @@ class PdfFile(models.Model):
 
     def __str__(self):
         return self.title
+
 
 
 class Summary(models.Model):
