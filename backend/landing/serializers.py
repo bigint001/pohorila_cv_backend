@@ -41,12 +41,6 @@ class PdfCategorySerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-def get_file_name(obj):
-    if obj.file:
-        return obj.file.name.split("/")[-1]
-    return ""
-
-
 class PdfFileSerializer(serializers.ModelSerializer):
     category = PdfCategorySerializer(read_only=True)
     file_url = serializers.SerializerMethodField()
@@ -80,6 +74,11 @@ class PdfFileSerializer(serializers.ModelSerializer):
         if request:
             return request.build_absolute_uri(url)
         return f"https://pohorila-cv-backend.onrender.com{url}"
+
+    def get_file_name(self, obj):
+        if obj.file:
+            return obj.file.name.split("/")[-1]
+        return ""
 
 
 class SummarySerializer(serializers.ModelSerializer):
